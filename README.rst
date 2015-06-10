@@ -74,7 +74,7 @@ To start a development environment, enter in a terminal::
   $ fig -f fig-dev.yml up
 
 This ends up with a development server listening on the host, on
-localhost:8080. Apache logs, peer sources, and pg data files can be
+localhost:8080. Apache logs, and pg data files can be
 accessed from the host machine at ``dev-env/`` on the peer-dockerfiles
 directory.
 
@@ -161,3 +161,20 @@ substitute dev-env with prod-env) ``dev-env/data:/data`` to
 ``dev-env/data:/path/to/old/pg/datadir``. The same applies to git data: We
 would have to change the volume in the ``gitdata`` section from
 ``dev-env/data:/data`` to ``dev-env/media:/path/to/old/peer/media``.
+
+Sources in the development environment
+--------------------------------------
+
+It is possible to mount in the peer container the sources for PEER from the
+host machine, so that they can be edited in the host and tested in the
+container. To do this, it is necessary to add, in the volumes section of the
+peerdev container definition in ``fig-dev.yml``, a line like::
+
+  - /host/path/to/peer:/opt/peer
+
+Also, this line can be removed from that section::
+
+  - dev-env/dj_logs:/opt/peer/var/log
+
+Be aware that the django settings file at ``/host/path/to/peer`` will override
+the one added during `Image configuration for the development environment`_.
