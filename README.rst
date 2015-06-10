@@ -123,7 +123,7 @@ To start a development environment, enter in a terminal::
 This ends up with a development server listening on the host, on
 localhost:8080. Apache logs, and pg data files can be
 accessed from the host machine at ``dev-env/`` on the peer-dockerfiles
-directory.
+root directory.
 
 Starting a Production environment
 ---------------------------------
@@ -135,7 +135,7 @@ To start a production environment, enter in a terminal::
   $ fig up
 
 This ends up with an apache server running on localhost:80. Apache logs
-and pg data files can be accessed from the host machine at
+and PostgreSQL data files can be accessed from the host machine at
 ``prod-env/`` on the peer-dockerfiles directory.
 
 Container data and logs
@@ -168,11 +168,11 @@ Reusing previous data
 ---------------------
 
 If there was a previous peer installation and it is necessary to reuse its
-data, we have to edit the Fig config files (fig-dev.yml or fig.yml). In the
-``volumes`` section of the ``pgdata`` container, we have to change
+data, we have to edit the Fig config files (i``fig-dev.yml`` or ``fig.yml``).
+In the ``volumes`` section of the ``pgdata`` container, we have to change
 ``dev-env/data:/data`` to ``/path/to/old/pg/datadir:/data`` (assuming we are
 using the development environment; if we are using the production environment,
-substitute dev-env with prod-env).
+substitute ``dev-env`` with ``prod-env``).
 
 The same applies to git data: We would have to change the volume in the
 ``gitdata`` section from ``dev-env/media:/opt/peer/peer/media`` to
@@ -191,18 +191,15 @@ Sources in the development environment
 
 It is possible to mount in the peer container the sources for PEER from the
 host machine, so that they can be edited in the host and tested in the
-container. To do this, it is necessary to add, in the volumes section of the
-peerdev container definition in ``fig-dev.yml``, a line like::
+container. To do this, it is necessary to add, in the ``volumes`` section of
+the ``peerdev`` container definition in ``fig-dev.yml``, a line like::
 
-  - /host/path/to/peer:/opt/peer
+  - /host/path/to/peer/peer:/opt/peer/peer
 
-Also, this line can be removed from that section::
-
-  - dev-env/dj_logs:/opt/peer/var/log
-
-The entire section volumes_from should also be removed from the peerdev
-container definition, and then, the container definition for gitdata is
-unused and can be also removed.
+Once this is done, the entire section ``volumes_from`` should be removed from
+the ``peerdev`` container definition, since the media directory will already be
+in the host machine (at ``/host/path/to/peer/peer/media``), and then, the
+container definition for ``gitdata`` is unused and can be also removed.
 
 Be aware that the django settings file at ``/host/path/to/peer`` will override
 the one added during `Image configuration for the development environment`_.
