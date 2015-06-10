@@ -174,8 +174,9 @@ The same applies to git data: We would have to change the volume in the
 ``/path/to/old/peer/media:/opt/peer/peer/media``.
 
 To be able to use the old data in the docker environment, it may be necessary
-to change the credentials for PostgreSQL, as explained in the
-`Database configuration`_ section.
+to change the credentials for PostgreSQL in the django config module at
+``peer/config/local_settings.py`` (or ``peer-dev/config/local_settings.py``)
+before building the image.
 
 Sources in the development environment
 --------------------------------------
