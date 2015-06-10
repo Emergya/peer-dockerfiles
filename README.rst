@@ -50,7 +50,7 @@ can either clone the repository with git::
 
 Or download a compressed copy::
 
-  $ wget https://github.com/Emergya/peer-dockerfiles/archive/0.1.zip
+  $ wget https://github.com/Emergya/peer-dockerfiles/archive/v0.1.zip
 
 Initialization
 --------------
