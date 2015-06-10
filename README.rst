@@ -108,9 +108,9 @@ Image configuration for the production environment
 
 Before building the docker images for the production environment, it is
 possible to edit the configuration for apache and django. The configuration
-for django is in ``peer-dev/config/local_settings.py``. The general
-configuration for apache is in ``peer-dev/config/apache2.conf``, and the
-configuration for the apache virtual host is in ``peer-dev/config/peer.conf``.
+for django is in ``peer/config/local_settings.py``. The general
+configuration for apache is in ``peer/config/apache2.conf``, and the
+configuration for the apache virtual host is in ``peer/config/peer.conf``.
     
 If there is need to modify the configuration after building the images, they
 have to be deleted with ``docker rmi <images>``, and rebuilt.
@@ -123,6 +123,15 @@ postgresql image, by editing ``postgresql/etc/pg_hba.conf`` and
 ``postgresql/etc/postgresql.conf``.
 If they are modified after building the image, the image has to be dropped and
 rebuilt.
+
+Database configuration
+----------------------
+
+It is possible to configure the username and password for postgresql, as
+well as the database name to hold our data. To do this, either in the
+development or in the production environment, it is necessary to edit the file
+at ``peer/scripts/initdb.sh`` (or ``peer-dev/scripts/initdb.sh``) and set the
+variables ``USER``, ``PASS``, and ``DB``. Do this before building the images.
 
 Guest data and logs
 +++++++++++++++++++
@@ -155,12 +164,14 @@ Reusing previous data
 
 If there was a previous peer installation and it is necessary to reuse its
 data, we have to edit the Fig config files (fig-dev.yml or fig.yml). In the
-``volumes`` section of the ``pgdata`` container, we have to change (if we are
+``volumes`` section of the ``pgdata`` container, we have to change
+``dev-env/data:/data`` to ``/path/to/old/pg/datadir:/data`` (assuming we are
 using the development environment; if we are using the production environment,
-substitute dev-env with prod-env) ``dev-env/data:/data`` to
-``dev-env/data:/path/to/old/pg/datadir``. The same applies to git data: We
-would have to change the volume in the ``gitdata`` section from
-``dev-env/data:/data`` to ``dev-env/media:/path/to/old/peer/media``.
+substitute dev-env with prod-env).
+
+The same applies to git data: We would have to change the volume in the
+``gitdata`` section from ``dev-env/media:/opt/peer/peer/media`` to
+``/path/to/old/peer/media:/opt/peer/peer/media``.
 
 Sources in the development environment
 --------------------------------------
@@ -175,6 +186,10 @@ peerdev container definition in ``fig-dev.yml``, a line like::
 Also, this line can be removed from that section::
 
   - dev-env/dj_logs:/opt/peer/var/log
+
+The entire section volumes_from should also be removed from the peerdev
+container definition, and then, the container definition for gitdata is
+unused and can be also removed.
 
 Be aware that the django settings file at ``/host/path/to/peer`` will override
 the one added during `Image configuration for the development environment`_.
