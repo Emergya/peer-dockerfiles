@@ -178,6 +178,9 @@ to change the credentials for PostgreSQL in the django config module at
 ``peer/config/local_settings.py`` (or ``peer-dev/config/local_settings.py``)
 before building the image.
 
+The PostgreSQL daemon running in the postgresql container is version 9.4,
+so check out whether it is necessary to migrate the databases.
+
 Sources in the development environment
 --------------------------------------
 
