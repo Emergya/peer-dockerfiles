@@ -1,0 +1,13 @@
+.coverage
+.tox
+__pycache__
+*.egg
+*.egg-info
+*.pyc
+.*.swp
+.*.swo
+*~
+*#
+venv/
+prod-env/
+dev-env/

@@ -1,0 +1,30 @@
+pgdata:
+  image: phusion/baseimage:0.9.16
+  volumes:
+    - prod-env/data:/data
+
+gitdata:
+  image: phusion/baseimage:0.9.16
+  volumes:
+    - prod-env/media:/usr/local/lib/python2.7/dist-packages/peer/media
+
+peer:
+  build: peer
+  hostname: peer
+  links:
+    - postgresql
+  ports:
+    - "80:80"
+  volumes:
+    - prod-env/ap_logs:/var/log
+  volumes_from:
+    - gitdata
+
+postgresql:
+  build: postgresql
+  expose:
+    - "5432"
+  volumes:
+    - prod-env/pg_logs:/var/log
+  volumes_from:
+    - pgdata
