@@ -91,6 +91,11 @@ development or in the production environment, it is necessary to edit the file
 at ``peer/scripts/initdb.sh`` (or ``peer-dev/scripts/initdb.sh``) and set the
 variables ``USER``, ``PASS``, and ``DB``. Do this before building the images.
 
+Having configured PostgreSQL with non-default ``USER``, ``PASS``, or ``DB``,
+it will be necessary to configure django to use those settings to connect to
+the db, setting them either at ``peer/config/local_settings.py`` or at
+``peer-dev/config/local_settings.py`` before building the images.
+
 Usage
 +++++
 
