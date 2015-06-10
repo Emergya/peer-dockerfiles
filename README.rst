@@ -37,11 +37,8 @@ Remember to activate the virtualenv to use fig::
   (fig)$ fig up
   ...
 
-Usage
-+++++
-
 Get the software
-----------------
+++++++++++++++++
 
 The sources for this project are kept in a public repository in github. You
 can either clone the repository with git::
@@ -51,45 +48,6 @@ can either clone the repository with git::
 Or download a compressed copy::
 
   $ wget https://github.com/Emergya/peer-dockerfiles/archive/v0.1.zip
-
-Initialization
---------------
-
-Before starting our environments, we need to create a couple of intermediate
-docker images. There is a simple script for this::
-
-  $ cd /path/to/peer-dockerfiles
-  $ bash initialize.sh
-
-Note: In case the user running these commands is not in the docker group,
-it may be necessary to use sudo to execute them.
-
-Starting a development environment
-----------------------------------
-
-To start a development environment, enter in a terminal::
-
-  $ cd /path/to/peer-dockerfiles
-  $ source /path/to/fig-virtualenv/bin/activate
-  $ fig -f fig-dev.yml up
-
-This ends up with a development server listening on the host, on
-localhost:8080. Apache logs, and pg data files can be
-accessed from the host machine at ``dev-env/`` on the peer-dockerfiles
-directory.
-
-Starting a Production environment
----------------------------------
-
-To start a production environment, enter in a terminal::
-
-  $ cd /path/to/peer-dockerfiles
-  $ source /path/to/fig/bin/activate
-  $ fig up
-
-This ends up with an apache server running on localhost:80. Apache logs
-and pg data files can be accessed from the host machine at
-``prod-env/`` on the peer-dockerfiles directory.
 
 Configuration
 +++++++++++++
@@ -133,8 +91,50 @@ development or in the production environment, it is necessary to edit the file
 at ``peer/scripts/initdb.sh`` (or ``peer-dev/scripts/initdb.sh``) and set the
 variables ``USER``, ``PASS``, and ``DB``. Do this before building the images.
 
-Guest data and logs
-+++++++++++++++++++
+Usage
++++++
+
+Initialization
+--------------
+
+Before starting our environments, we need to create a couple of intermediate
+docker images. There is a simple script for this::
+
+  $ cd /path/to/peer-dockerfiles
+  $ bash initialize.sh
+
+Note: In case the user running these commands is not in the docker group,
+it may be necessary to use sudo to execute them.
+
+Starting a development environment
+----------------------------------
+
+To start a development environment, enter in a terminal::
+
+  $ cd /path/to/peer-dockerfiles
+  $ source /path/to/fig-virtualenv/bin/activate
+  $ fig -f fig-dev.yml up
+
+This ends up with a development server listening on the host, on
+localhost:8080. Apache logs, and pg data files can be
+accessed from the host machine at ``dev-env/`` on the peer-dockerfiles
+directory.
+
+Starting a Production environment
+---------------------------------
+
+To start a production environment, enter in a terminal::
+
+  $ cd /path/to/peer-dockerfiles
+  $ source /path/to/fig/bin/activate
+  $ fig up
+
+This ends up with an apache server running on localhost:80. Apache logs
+and pg data files can be accessed from the host machine at
+``prod-env/`` on the peer-dockerfiles directory.
+
+Container data and logs
++++++++++++++++++++++++
 
 Some of the data generated in the guest environments is exposed in the host.
 The development environment creates a directory ``dev-env`` in the host for
@@ -172,6 +172,10 @@ substitute dev-env with prod-env).
 The same applies to git data: We would have to change the volume in the
 ``gitdata`` section from ``dev-env/media:/opt/peer/peer/media`` to
 ``/path/to/old/peer/media:/opt/peer/peer/media``.
+
+To be able to use the old data in the docker environment, it may be necessary
+to change the credentials for PostgreSQL, as explained in the
+`Database configuration`_ section.
 
 Sources in the development environment
 --------------------------------------
