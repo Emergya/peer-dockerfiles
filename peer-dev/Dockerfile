@@ -1,4 +1,4 @@
-FROM peer/python:2.7.10
+FROM phusion/baseimage:0.9.16
 
 MAINTAINER Enrique Perez Arnaud <eperez@emergya.com>
 
@@ -14,11 +14,12 @@ RUN apt-get update && apt-get install -y postgresql-server-dev-9.3 \
                                          libxmlsec1-openssl \
                                          libpq-dev \
                                          libffi-dev \
-                                         swig
+                                         swig \
+                                         python-dev \
+                                         python-pip
 
 ADD scripts /scripts
 RUN chmod +x /scripts/start.sh
-RUN chmod +x /scripts/initdb.sh
 
 WORKDIR /opt
 
@@ -29,6 +30,8 @@ ADD config/local_settings.py /opt/peer/peer/local_settings.py
 ADD config/buildout.cfg /opt/peer/buildout.cfg
 
 WORKDIR /opt/peer
+
+RUN easy_install -U setuptools
 
 RUN python bootstrap.py \
   && bin/buildout

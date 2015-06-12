@@ -5,10 +5,6 @@ set -e
 
 if [[ -e /firstrun ]]; then
 
-  if [[ -e /scripts/initdb.sh ]]; then
-    bash /scripts/initdb.sh
-  fi
-
   echo "Creating DB schema..."
   django-admin.py syncdb --settings=peer.settings --noinput
   echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | \

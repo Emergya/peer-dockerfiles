@@ -1,13 +1,3 @@
-pgdata:
-  image: phusion/baseimage:0.9.16
-  volumes:
-    - dev-env/data:/data
-
-gitdata:
-  image: phusion/baseimage:0.9.16
-  volumes:
-    - dev-env/media:/opt/peer/peer/media
-
 peerdev:
   build: peer-dev
   hostname: peer
@@ -17,14 +7,16 @@ peerdev:
     - "8080:8080"
   volumes:
     - dev-env/dj_logs:/opt/peer/var/log
-  volumes_from:
-    - gitdata
+    - dev-env/media:/opt/peer/peer/media
 
 postgresql:
-  build: postgresql
+  image: paintedfox/postgresql:latest
+  environment:
+    USER: peer
+    PASS: peer
+    DB: peer
   expose:
     - "5432"
   volumes:
+    - dev-env/data:/data
     - dev-env/pg_logs:/var/log
-  volumes_from:
-    - pgdata

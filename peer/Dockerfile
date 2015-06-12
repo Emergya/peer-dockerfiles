@@ -25,7 +25,6 @@ RUN service apache2 stop && \
 
 ADD scripts /scripts
 RUN chmod +x /scripts/start.sh
-RUN chmod +x /scripts/initdb.sh
 
 RUN pip install peer
 
