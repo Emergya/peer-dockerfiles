@@ -73,15 +73,6 @@ configuration for the apache virtual host is in ``peer/config/peer.conf``.
 If there is need to modify the configuration after building the images, they
 have to be deleted with ``docker rmi <images>``, and rebuilt.
 
-Image configuration for PostgreSQL
-----------------------------------
-
-It is possible to modify the PostgreSQL config files befor building the
-postgresql image, by editing ``postgresql/etc/pg_hba.conf`` and
-``postgresql/etc/postgresql.conf``.
-If they are modified after building the image, the image has to be dropped and
-rebuilt.
-
 Database configuration
 ----------------------
 
@@ -99,16 +90,7 @@ the db, setting them either at ``peer/config/local_settings.py`` or at
 Usage
 +++++
 
-Initialization
---------------
-
-Before starting our environments, we need to create a couple of intermediate
-docker images. There is a simple script for this::
-
-  $ cd /path/to/peer-dockerfiles
-  $ bash initialize.sh
-
-Note: In case the user running these commands is not in the docker group,
+Note: In case the user running docker commands is not in the docker group,
 it may be necessary to use sudo to execute them.
 
 Starting a development environment
@@ -121,7 +103,7 @@ To start a development environment, enter in a terminal::
   $ fig -f fig-dev.yml up
 
 This ends up with a development server listening on the host, on
-localhost:8080. Apache logs, and pg data files can be
+localhost:8080. Logs and PostrgreSQL data files can be
 accessed from the host machine at ``dev-env/`` on the peer-dockerfiles
 root directory.
 
@@ -169,22 +151,19 @@ Reusing previous data
 
 If there was a previous peer installation and it is necessary to reuse its
 data, we have to edit the Fig config files (i``fig-dev.yml`` or ``fig.yml``).
-In the ``volumes`` section of the ``pgdata`` container, we have to change
+In the ``volumes`` section of the ``postgresql`` container, we have to change
 ``dev-env/data:/data`` to ``/path/to/old/pg/datadir:/data`` (assuming we are
 using the development environment; if we are using the production environment,
 substitute ``dev-env`` with ``prod-env``).
 
 The same applies to git data: We would have to change the volume in the
-``gitdata`` section from ``dev-env/media:/opt/peer/peer/media`` to
-``/path/to/old/peer/media:/opt/peer/peer/media``.
+``peer`` (or ``peerdev``) section from ``dev-env/media:/opt/peer/peer/media``
+to ``/path/to/old/peer/media:/opt/peer/peer/media``.
 
 To be able to use the old data in the docker environment, it may be necessary
 to change the credentials for PostgreSQL in the django config module at
 ``peer/config/local_settings.py`` (or ``peer-dev/config/local_settings.py``)
 before building the image.
-
-The PostgreSQL daemon running in the postgresql container is version 9.4,
-so check out whether it is necessary to migrate the databases.
 
 Sources in the development environment
 --------------------------------------
@@ -196,10 +175,11 @@ the ``peerdev`` container definition in ``fig-dev.yml``, a line like::
 
   - /host/path/to/peer/peer:/opt/peer/peer
 
-Once this is done, the entire section ``volumes_from`` should be removed from
-the ``peerdev`` container definition, since the media directory will already be
-in the host machine (at ``/host/path/to/peer/peer/media``), and then, the
-container definition for ``gitdata`` is unused and can be also removed.
+Once this is done, the line mapping the media directory in ``volumes``
+(``dev-env/media:/opt/peer/peer/media``) should be removed, since the media
+directory will already be
+in the host machine (at ``/host/path/to/peer/peer/media``).
 
-Be aware that the django settings file at ``/host/path/to/peer`` will override
-the one added during `Image configuration for the development environment`_.
+Be aware that the django settings file at ``/host/path/to/peer/peer`` will
+override the one added during `Image configuration for the development
+environment`_.
