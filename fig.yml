@@ -1,22 +1,9 @@
 peer:
   build: peer
   hostname: peer
-  links:
-    - postgresql
   ports:
-    - "80:80"
+    - "8000:8000"
   volumes:
     - prod-env/media:/usr/local/lib/python2.7/dist-packages/peer/media
-    - prod-env/ap_logs:/var/log
-
-postgresql:
-  image: paintedfox/postgresql:latest
-  environment:
-    USER: peer
-    PASS: peer
-    DB: peer
-  expose:
-    - "5432"
-  volumes:
+    - prod-env/static:/usr/local/lib/python2.7/dist-packages/peer/static
     - prod-env/data:/data
-    - prod-env/pg_logs:/var/log
