@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y git \
                                          postgresql-server-dev-9.4
 
 RUN pip install gunicorn
-RUN pip install GitPython==0.3.2
-RUN pip install peer==0.14.0
+RUN pip install peer==0.17.1
 
 VOLUME ["/data", "/usr/local/lib/python2.7/dist-packages/peer/static", "/usr/local/lib/python2.7/dist-packages/peer/media"]
 
