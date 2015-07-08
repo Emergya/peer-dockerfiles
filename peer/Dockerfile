@@ -19,10 +19,14 @@ RUN apt-get update && apt-get install -y git \
 RUN pip install gunicorn
 RUN pip install peer==0.19.0
 
-VOLUME ["/data", "/usr/local/lib/python2.7/dist-packages/peer/static", "/usr/local/lib/python2.7/dist-packages/peer/media"]
+RUN mkdir /usr/local/lib/python2.7/dist-packages/peer/local_settings
+ADD config /config
 
-ADD config/local_settings.py /usr/local/lib/python2.7/dist-packages/peer/local_settings.py
-ADD config/gunicorn.py /etc/gunicorn.py
+VOLUME ["/data", \
+        "/usr/local/lib/python2.7/dist-packages/peer/static", \
+        "/usr/local/lib/python2.7/dist-packages/peer/media", \
+        "/usr/local/lib/python2.7/dist-packages/peer/local_settings", \
+        ]
 
 ADD scripts/peer.wsgi /usr/local/lib/python2.7/dist-packages/peer/peer_wsgi.py
 ADD scripts/run.sh /usr/local/bin/run.sh
