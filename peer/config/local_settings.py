@@ -18,6 +18,17 @@ DATABASES = {
 
 TIME_ZONE = 'Europe/Madrid'
 
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = 25
+
+DEFAULT_FROM_EMAIL = 'no-reply@example.com'
+
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
+
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+
 RECAPTCHA_PUBLIC_KEY = ''
 RECAPTCHA_PRIVATE_KEY = ''
 
