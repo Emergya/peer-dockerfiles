@@ -116,44 +116,43 @@ All the data managed by the application can be accessed from the host machine,
 for inspection and backups. The database can be found at ``prod-env/data``,
 and the git repository at ``prod-env/media``.
 
-THE REST OF THIS FILE IS WORK IN PROGRESS, PLEASE IGNORE
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Development environment
++++++++++++++++++++++++
 
-Reusing previous data
+In the development environment we use django's development server
+to serve PEER checked out from github in an environment built by buildout.
+
+Configuration
+-------------
+
+The buildout config in ``peer-dev/config/buildout.cfg`` can be edited before
+building the image to change the environment to be built by buildout.
+
+Also, in the ``development.yml`` config file for docker-compose, there is a
+volume commented out, it can be uncommented and adjusted to the local path
+to the PEER sources in the docker host machine, so that they can be edited
+outside the container and the effects of the edition can be seen in the
+container.
+
+The django settings files in the PEER sources in the host machine must be
+adjusted before building the docker images. In particular, the database
+configuration will govern the creation of the db, so it is important to get
+it right. In this version, the driver must be sqlite3, and the NAME of the
+db should be ``/data/peer.db``.
+
+Data and logs
+-------------
+
+The PEER database should be exposed in the host machine at ``dev-env/data/``.
+The logs from django should be exposed at ``dev-env/logs/``.
+The git data, that lives in django's ``media/`` directory, should be accesible
+at the local path to the project sources in the host machine, if they have been
+mounted in the container at ``/opt/peer/peer/``.
+
+Using the environment
 ---------------------
 
-If there was a previous peer installation (that was not using docker)
-and it is necessary to reuse its
-data, we have to edit the Fig config files (i``fig-dev.yml`` or ``fig.yml``).
-In the ``volumes`` section of the ``postgresql`` container, we have to change
-``dev-env/data:/data`` to ``/path/to/old/pg/datadir:/data`` (assuming we are
-using the development environment; if we are using the production environment,
-substitute ``dev-env`` with ``prod-env``).
+The environment is managed in the same way as the production environment,
+except that we must specify the docker-compose config file::
 
-The same applies to git data: We would have to change the volume in the
-``peer`` (or ``peerdev``) section from ``dev-env/media:/opt/peer/peer/media``
-to ``/path/to/old/peer/media:/opt/peer/peer/media``.
-
-To be able to use the old data in the docker environment, it may be necessary
-to change the credentials for PostgreSQL in the django config module at
-``peer/config/local_settings.py`` (or ``peer-dev/config/local_settings.py``)
-before building the image.
-
-Sources in the development environment
---------------------------------------
-
-It is possible to mount in the peer container the sources for PEER from the
-host machine, so that they can be edited in the host and tested in the
-container. To do this, it is necessary to add, in the ``volumes`` section of
-the ``peerdev`` container definition in ``fig-dev.yml``, a line like::
-
-  - /host/path/to/peer/peer:/opt/peer/peer
-
-Once this is done, the line mapping the media directory in ``volumes``
-(``dev-env/media:/opt/peer/peer/media``) should be removed, since the media
-directory will already be
-in the host machine (at ``/host/path/to/peer/peer/media``).
-
-Be aware that the django settings file at ``/host/path/to/peer/peer`` will
-override the one added during `Image configuration for the development
-environment`_.
+  $ docker-compose -f development.yml up
