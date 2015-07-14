@@ -1,0 +1,9 @@
+peerdev:
+  build: peer-dev
+  hostname: peer
+  ports:
+    - "8080:8080"
+  volumes:
+    - dev-env/logs:/opt/peer/var/log
+    - dev-env/data:/data
+#    - <path/to>/peer/peer:/opt/peer/peer
