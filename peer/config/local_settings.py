@@ -1,4 +1,4 @@
-
+import sys
 # local settings
 
 DEBUG = False
@@ -36,3 +36,26 @@ RECAPTCHA_PRIVATE_KEY = ''
 SAML_ENABLED = False
 SAML_CONFIG = {}
 REMOTE_USER_ENABLED = False
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'stream': sys.stdout
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'rest': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    }
+}
