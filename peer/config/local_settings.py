@@ -40,11 +40,22 @@ REMOTE_USER_ENABLED = False
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'generic': {
+            'format': '%(asctime)s [%(process)d] [%(levelname)s] %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+            'class': 'logging.Formatter',
+        },
+    },
     'handlers': {
         'console':{
             'level':'INFO',
             'class':'logging.StreamHandler',
-            'stream': sys.stdout
+            'stream': sys.stdout,
+            'formatter': 'verbose',
         },
     },
     'loggers': {
