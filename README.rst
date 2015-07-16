@@ -50,12 +50,13 @@ Configuration
 +++++++++++++
 
 Before building the docker images for the production environment, it is
-possible to edit the configuration for gunicorn and django. The configuration
-for django is in ``peer/config/local_settings.py``. The configuration for
-gunicorn is in ``peer/config/gunicorn.py``.
+possible to edit the configuration for the django db settings, at
+``peer/config/local_db_settings.py``.
 
 If there is need to modify the configuration after building the images,
-it can be done so at ``prod-env/local_settings/``.
+for both django and gunicorn, it can be done so at
+``prod-env/local_settings/gunicorn.py`` and
+``prod-env/local_settings/local_settings.py``.
 
 Usage
 +++++
@@ -69,8 +70,8 @@ Creating an environment
 To create a peer environment, enter in a terminal::
 
   $ cd /path/to/peer-dockerfiles
-  $ vim peer/config/local_settings.py peer/config/gunicorn.py
-  $ source /path/to/compose-virtualenv/bin/activate
+  $ vim peer/config/local_db_settings.py
+  $ source /path/to/docker-compose-virtualenv/bin/activate
   $ docker-compose up
 
 This ends up with gunicorn listening on port 8000 of the host machine.
@@ -101,6 +102,7 @@ and remove the image::
 
 Then get the peer-dockerfiles tag that describes the upgraded environment::
 
+  $ git pull
   $ git checkout <whatever>
 
 Finally, reconstruct the environment. All the data in ``prod-env/`` will be
@@ -135,7 +137,8 @@ outside the container and the effects of the edition can be seen in the
 container.
 
 The django settings files in the PEER sources in the host machine must be
-adjusted before building the docker images. In particular, the database
+adjusted before building the docker images (an example config file is provided
+as local_settings.example in the peer sources). In particular, the database
 configuration will govern the creation of the db, so it is important to get
 it right. In this version, the driver must be sqlite3, and the NAME of the
 db should be ``/data/peer.db``.
