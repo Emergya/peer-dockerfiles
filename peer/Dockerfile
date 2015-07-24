@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y git \
                                          postgresql-server-dev-9.4
 
 RUN pip install gunicorn
-RUN pip install peer==0.19.1
+RUN pip install peer
 
 RUN mkdir /usr/local/lib/python2.7/dist-packages/peer/local_settings
 ADD config /config
