@@ -31,6 +31,7 @@ RUN chmod 755 /usr/local/bin/run.sh
 WORKDIR /opt/peer
 
 RUN pip install -U setuptools
+RUN pip install "cryptography >= 0.7, < 1.0"
 RUN python bootstrap.py \
   && bin/buildout
 
