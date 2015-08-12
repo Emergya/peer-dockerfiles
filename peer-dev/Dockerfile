@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y git \
                                          python-dev \
                                          python-pip \
                                          libffi-dev \
+                                         libssl-dev \
                                          postgresql-server-dev-9.4
 
 WORKDIR /opt
