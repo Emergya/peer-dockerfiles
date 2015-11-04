@@ -6,4 +6,5 @@ peerdev:
   volumes:
     - dev-env/logs:/opt/peer/var/log
     - dev-env/data:/data
-#    - <path/to>/peer/peer:/opt/peer/peer
+#    - <path/to/peer>/peer:/opt/peer/peer
+    - dev-env/repo:/var/peer-media/vf_repo
