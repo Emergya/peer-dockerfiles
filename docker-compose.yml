@@ -8,3 +8,15 @@ peer:
     - prod-env/static:/usr/local/lib/python2.7/dist-packages/peer/static
     - prod-env/local_settings:/usr/local/lib/python2.7/dist-packages/peer/local_settings
     - prod-env/data:/data
+
+postgresql:
+  image: postgres:9.6.0
+  hostname: peer-postgres
+  ports:
+    - "5555:5432"
+  volumes:
+    - /home/eperez/tmp/data:/var/lib/postgresql/data
+  environment:
+    - "POSTGRES_PASSWORD=peer"
+    - "POSTGRES_USER=peer"
+    - "POSTGRES_DB=peer"
