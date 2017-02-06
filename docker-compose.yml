@@ -11,15 +11,12 @@ networks:
         gateway: 172.19.68.1
 
 volumes:
-  static-volume:
+  static-assets:
 
 services:
 
   postgresql:
     image: postgres:9.6.0
-    networks:
-      peer:
-        ipv4_address: 172.19.68.101
     hostname: postgresql
     ports:
       - "5432:5432"
@@ -27,44 +24,47 @@ services:
       - 5432
     volumes:
       - ./data:/var/lib/postgresql/data
+      - ./log/postgresql:/var/log/postgresql
     environment:
-      - "POSTGRES_PASSWORD=peer"
-      - "POSTGRES_USER=peer"
-      - "POSTGRES_DB=peer"
-      - "PGDATA=/var/lib/postgresql/data/pgdata"
+      - POSTGRES_PASSWORD=peer
+      - POSTGRES_USER=peer
+      - POSTGRES_DB=peer
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    networks:
+      peer:
+        ipv4_address: 172.19.68.100
 
   peer:
     build: peer
     image: peer/peer:0.1
-    networks:
-      peer:
-        ipv4_address: 172.19.68.102
     hostname: peer
     ports:
       - "8080:8080"
-    links:
-      - postgresql
     volumes:
-      - static-volume:/opt/peer/static
-      - ./media:/opt/peer/media
-      - ./log/peer:/var/log
+      - static-assets:/opt/peer/peer/static
+      - ./media:/opt/peer/peer/media
+      - ./etc/local_settings:/opt/peer/peer/local_settings
+      - ./log/peer:/opt/peer/var/log
+    networks:
+      peer:
+        ipv4_address: 172.19.68.101
     depends_on:
       - postgresql
 
   nginx:
     build: nginx
     image: peer/nginx:0.1
-    networks:
-      peer:
-        ipv4_address: 172.19.68.103
     hostname: registry-test.swamid.se
-    ports:
-      - "80:80"
     links:
       - peer
     volumes:
+      - static-assets:/var/static:ro
       - ./log/nginx:/var/log/nginx
-      - static-volume:/var/static
+    networks:
+      peer:
+        ipv4_address: 172.19.68.102
+    ports:
+      - "80:80"
     environment:
       - NGINX_HOST=registry-test.swamid.se
       - NGINX_PORT=80

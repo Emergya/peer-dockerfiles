@@ -8,7 +8,7 @@ ADMINS = (
   # ('Your Name', 'your_email@example.com'),
 )
 
-ALLOWED_HOSTS = ['localhost', 'peer']
+ALLOWED_HOSTS = ['localhost', 'peer', 'registry-test.swamid.se']
 
 TIME_ZONE = 'Europe/Madrid'
 
