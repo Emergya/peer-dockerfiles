@@ -1,22 +1,73 @@
-peer:
-  build: peer
-  hostname: peer
-  ports:
-    - "8000:8000"
-  volumes:
-    - prod-env/media:/usr/local/lib/python2.7/dist-packages/peer/media
-    - prod-env/static:/usr/local/lib/python2.7/dist-packages/peer/static
-    - prod-env/local_settings:/usr/local/lib/python2.7/dist-packages/peer/local_settings
-    - prod-env/data:/data
 
-postgresql:
-  image: postgres:9.6.0
-  hostname: peer-postgres
-  ports:
-    - "5555:5432"
-  volumes:
-    - /home/eperez/tmp/data:/var/lib/postgresql/data
-  environment:
-    - "POSTGRES_PASSWORD=peer"
-    - "POSTGRES_USER=peer"
-    - "POSTGRES_DB=peer"
+version: '2'
+
+networks:
+  peer:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.19.68.0/24
+        gateway: 172.19.68.1
+
+volumes:
+  static-volume:
+
+services:
+
+  postgresql:
+    image: postgres:9.6.0
+    networks:
+      peer:
+        ipv4_address: 172.19.68.101
+    hostname: postgresql
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_PASSWORD=peer"
+      - "POSTGRES_USER=peer"
+      - "POSTGRES_DB=peer"
+      - "PGDATA=/var/lib/postgresql/data/pgdata"
+
+  peer:
+    build: peer
+    image: peer/peer:0.1
+    networks:
+      peer:
+        ipv4_address: 172.19.68.102
+    hostname: peer
+    ports:
+      - "8080:8080"
+    links:
+      - postgresql
+    volumes:
+      - static-volume:/opt/peer/static
+      - ./media:/opt/peer/media
+      - ./log/peer:/var/log
+    depends_on:
+      - postgresql
+
+  nginx:
+    build: nginx
+    image: peer/nginx:0.1
+    networks:
+      peer:
+        ipv4_address: 172.19.68.103
+    hostname: registry-test.swamid.se
+    ports:
+      - "80:80"
+    links:
+      - peer
+    volumes:
+      - ./log/nginx:/var/log/nginx
+      - static-volume:/var/static
+    environment:
+      - NGINX_HOST=registry-test.swamid.se
+      - NGINX_PORT=80
+    command: ["/wait-for-it.sh", "peer:8080", "-s", "-t", "3600", "--", "nginx"]
+    depends_on:
+      - peer

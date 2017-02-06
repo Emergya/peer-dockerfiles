@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y git \
                                          zlib1g-dev \
                                          python-dev \
                                          python-pip \
-                                         postgresql-server-dev-9.4
+                                         postgresql-server-dev-9.4 \
+                                         postgresql-client-9.4
 
 RUN pip install gunicorn
 RUN pip install peer
