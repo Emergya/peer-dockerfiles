@@ -9,5 +9,5 @@ __pycache__
 *~
 *#
 venv/
-prod-env/
-dev-env/
+etc/
+log/
