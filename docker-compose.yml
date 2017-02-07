@@ -45,11 +45,22 @@ services:
       - ./media:/opt/peer/peer/media
       - ./etc/local_settings:/opt/peer/peer/local_settings
       - ./log/peer:/opt/peer/var/log
+      # sources
+      - ../peer/peer/account:/opt/peer/peer/account:ro
+      - ../peer/peer/customfields:/opt/peer/peer/customfields:ro
+      - ../peer/peer/domain:/opt/peer/peer/domain:ro
+      - ../peer/peer/entity:/opt/peer/peer/entity:ro
+      - ../peer/peer/formats:/opt/peer/peer/formats:ro
+      - ../peer/peer/portal:/opt/peer/peer/portal:ro
+      - ../peer/peer/pysaml2:/opt/peer/peer/pysaml2:ro
+      - ../peer/peer/staticfiles:/opt/peer/peer/staticfiles:ro
+      - ../peer/peer/templates:/opt/peer/peer/templates:ro
     networks:
       peer:
         ipv4_address: 172.19.68.101
     depends_on:
       - postgresql
+
 
   nginx:
     build: nginx
