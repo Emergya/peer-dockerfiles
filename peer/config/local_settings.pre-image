@@ -30,6 +30,8 @@ SAML_ENABLED = False
 SAML_CONFIG = {}
 REMOTE_USER_ENABLED = False
 
+LOCAL_LOGIN_ENABLED = True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
