@@ -12,6 +12,7 @@ networks:
 
 volumes:
   static-assets:
+  ssl-certs:
 
 services:
 
@@ -42,6 +43,7 @@ services:
       - "8080:8080"
     volumes:
       - static-assets:/opt/peer/peer/static
+      - ssl-certs:/opt/peer/parts
       - ./media:/opt/peer/peer/media
       - ./etc/local_settings:/opt/peer/peer/local_settings
       - ./log/peer:/opt/peer/var/log
@@ -70,15 +72,17 @@ services:
       - peer
     volumes:
       - static-assets:/var/static:ro
+      - ssl-certs:/etc/ssl-certs:ro
       - ./log/nginx:/var/log/nginx
+      - ./etc/nginx:/etc/nginx
     networks:
       peer:
         ipv4_address: 172.19.68.102
     ports:
-      - "80:80"
+        - "443:443"
     environment:
       - NGINX_HOST=registry-test.swamid.se
-      - NGINX_PORT=80
+      - NGINX_PORT=443
     command: ["/wait-for-it.sh", "peer:8080", "-s", "-t", "3600", "--", "nginx"]
     depends_on:
       - peer
