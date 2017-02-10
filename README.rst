@@ -42,10 +42,9 @@ it may be necessary to use sudo to execute them.
 Creating an environment
 -----------------------
 
-To create a peer environment, enter in a terminal::
+To create a peer environment and start it, enter in a terminal::
 
   $ cd /path/to/peer-dockerfiles
-  $ vim peer/config/local_db_settings.py
   $ docker-compose up
 
 This ends up with 3 containers, one running postgresql, one running the peer
